@@ -1,0 +1,6 @@
+services:
+	myStrategy: SixtyEightPublishers\Asset\Tests\Cases\DI\CustomVersionStrategy('-FOO')
+
+asset:
+	version_strategy: @myStrategy
+	base_urls: http://cdn.example.com

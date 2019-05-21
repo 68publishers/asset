@@ -1,0 +1,32 @@
+{
+	"name": "68publishers/asset",
+	"description": "Integration of Symfony's Asset component into Nette Framework.",
+	"keywords": ["68publishers", "asset", "nette"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Tomáš Glawaty",
+			"email": "tomasglawaty@icloud.com"
+		}
+	],
+	"require": {
+		"php": "~7.1",
+		"nette/di": "^2.4",
+		"nette/utils": "^3.0",
+		"latte/latte": "^2.4",
+		"symfony/asset": "^4.2"
+	},
+	"require-dev": {
+		"nette/tester": "^2.2",
+		"nette/application": "^2.4",
+		"friendsofphp/php-cs-fixer": "^2.15"
+	},
+	"autoload": {
+		"classmap": ["src/"],
+		"files": []
+	},
+	"autoload-dev": {
+		"classmap": ["tests/"],
+		"files": []
+	}
+}
