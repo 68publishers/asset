@@ -52,7 +52,7 @@ final class Config
 		foreach ($config['packages'] as $name => $package) {
 			Nette\Utils\Validators::assert($package, 'array');
 
-			$config['packages'][(string) $name] = $package = $this->validatePackage(
+			$config['packages'][(string) $name] = $this->validatePackage(
 				$this->mergeConfig($extension, self::PACKAGE_DEFAULTS, $package),
 				FALSE
 			);

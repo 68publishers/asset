@@ -18,7 +18,7 @@
 	},
 	"require-dev": {
 		"nette/tester": "^2.2",
-		"nette/application": "^2.4",
+		"nette/application": "~2.4",
 		"friendsofphp/php-cs-fixer": "^2.15"
 	},
 	"autoload": {

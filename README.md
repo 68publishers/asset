@@ -44,11 +44,11 @@ Configuration options are described in official [Symfony documentation](https://
 You can also use Filter/Helper equivalent. For example if you want to store result in variable:
 
 ```latte
-{var img = ('my/awesome/image.png')|getUrl}
-{var imgFoo = ('my/awesome/image.png', 'foo')|getUrl}
+{var img = ('my/awesome/image.png')|asset}
+{var imgFoo = ('my/awesome/image.png', 'foo')|asset}
 
-{var version = ('my/awesome/image.png')|getVersion}
-{var versionFoo = ('my/awesome/image.png', 'foo')|getVersion}
+{var version = ('my/awesome/image.png')|asset_version}
+{var versionFoo = ('my/awesome/image.png', 'foo')|asset_version}
 ```
 
 ## Contributing
