@@ -6,7 +6,7 @@ namespace SixtyEightPublishers\Asset\Latte;
 
 use Latte;
 
-class AssetMacroSet extends Latte\Macros\MacroSet
+final class AssetMacroSet extends Latte\Macros\MacroSet
 {
 	/**
 	 * @param \Latte\Compiler $compiler
@@ -26,6 +26,7 @@ class AssetMacroSet extends Latte\Macros\MacroSet
 	 * @param \Latte\PhpWriter $writer
 	 *
 	 * @return string
+	 * @throws \Latte\CompileException
 	 */
 	public function macroAsset(Latte\MacroNode $node, Latte\PhpWriter $writer): string
 	{
@@ -37,6 +38,7 @@ class AssetMacroSet extends Latte\Macros\MacroSet
 	 * @param \Latte\PhpWriter $writer
 	 *
 	 * @return string
+	 * @throws \Latte\CompileException
 	 */
 	public function macroAssetVersion(Latte\MacroNode $node, Latte\PhpWriter $writer): string
 	{

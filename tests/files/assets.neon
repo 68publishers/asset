@@ -20,6 +20,6 @@ asset:
 		bar_version_strategy:
 			base_urls:
 				- 'https://bar_version_strategy.example.com'
-			version_strategy: SixtyEightPublishers\Asset\Tests\Cases\DI\CustomVersionStrategy('-FOO')
+			version_strategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('-FOO')
 		json_manifest_strategy:
 			json_manifest_path: '%filesDir%/manifest.json'

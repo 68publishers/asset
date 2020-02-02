@@ -10,14 +10,14 @@ use SixtyEightPublishers;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class AssertExtensionTest extends SixtyEightPublishers\Asset\Tests\Cases\TestCase
+final class AssertExtensionTest extends Tester\TestCase
 {
 	/**
 	 * @return void
 	 */
 	public function testAssets(): void
 	{
-		$container = $this->createContainer(self::class . __METHOD__, __DIR__ . '/../../files/assets.neon');
+		$container = SixtyEightPublishers\Asset\Tests\Helper\ContainerFactory::createContainer(__METHOD__, __DIR__ . '/../../files/assets.neon');
 
 		/** @var \Symfony\Component\Asset\Packages $packages */
 		$packages = $container->getService('asset.packages');
@@ -86,7 +86,7 @@ final class AssertExtensionTest extends SixtyEightPublishers\Asset\Tests\Cases\T
 	 */
 	public function testAssetsDefaultVersionStrategyAsService(): void
 	{
-		$container = $this->createContainer(self::class . __METHOD__, __DIR__ . '/../../files/assets_version_strategy_as_service.neon');
+		$container = SixtyEightPublishers\Asset\Tests\Helper\ContainerFactory::createContainer(__METHOD__, __DIR__ . '/../../files/assets_version_strategy_as_service.neon');
 
 		/** @var \Symfony\Component\Asset\Packages $packages */
 		$packages = $container->getService('asset.packages');
@@ -108,12 +108,13 @@ final class AssertExtensionTest extends SixtyEightPublishers\Asset\Tests\Cases\T
 	 * @param string                            $version
 	 * @param string                            $path
 	 *
+	 * @return void
 	 * @throws \Exception
 	 */
 	private function assertPackage(Symfony\Component\Asset\Packages $packages, ?string $name, string $type, string $url, string $version, string $path = 'my/image.png'): void
 	{
 		# package must be defined
-		Tester\Assert::noError(function () use ($packages, $name) {
+		Tester\Assert::noError(static function () use ($packages, $name) {
 			$packages->getPackage($name);
 		});
 

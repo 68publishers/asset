@@ -1,5 +1,5 @@
 services:
-	myStrategy: SixtyEightPublishers\Asset\Tests\Cases\DI\CustomVersionStrategy('-FOO')
+	myStrategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('-FOO')
 
 asset:
 	version_strategy: @myStrategy
