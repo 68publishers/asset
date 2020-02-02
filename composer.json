@@ -10,7 +10,7 @@
 		}
 	],
 	"require": {
-		"php": "^7.1",
+		"php": "^7.2",
 		"nette/di": "^2.4",
 		"nette/utils": "^2.4",
 		"latte/latte": "^2.4",
