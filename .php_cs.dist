@@ -12,7 +12,9 @@ return PhpCsFixer\Config::create()
     	'@PSR2' => TRUE,
     	'array_syntax' => ['syntax' => 'short'],
     	'trailing_comma_in_multiline_array' => true,
-    	'lowercase_constants' => FALSE,
+    	'constant_case' => [
+    	    'case' => 'upper',
+    	],
     	'declare_strict_types' => TRUE,
     	'phpdoc_align' => TRUE,
     	'blank_line_after_opening_tag' => TRUE,
