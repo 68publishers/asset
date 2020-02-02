@@ -1,4 +1,4 @@
 {
-  "my/image.png": "/my/image.abc123.png",
-  "my/second/file.png": "/my/second/file.abc123.png"
+	"my/image.png": "/my/image.abc123.png",
+	"my/second/file.png": "/my/second/file.abc123.png"
 }
