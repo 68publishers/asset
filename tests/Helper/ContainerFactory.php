@@ -22,9 +22,9 @@ final class ContainerFactory
 			define('TEMP_PATH', __DIR__ . '/../temp');
 		}
 
-		$loader = new Nette\DI\ContainerLoader(TEMP_PATH . '/cache/Nette.Configurator', TRUE);
+		$loader = new Nette\DI\ContainerLoader(TEMP_PATH . '/Nette.Configurator_' . md5($name), TRUE);
 		$class = $loader->load(static function (Nette\DI\Compiler $compiler) use ($config): void {
-			$compiler->addExtension('latte', new Nette\Bridges\ApplicationDI\LatteExtension(TEMP_PATH . '/cache/latte', TRUE));
+			$compiler->addExtension('latte', new Nette\Bridges\ApplicationDI\LatteExtension(TEMP_PATH . '/latte', TRUE));
 			$compiler->addExtension('asset', new SixtyEightPublishers\Asset\DI\AssetExtension());
 			$compiler->addConfig([
 				'parameters' => [
