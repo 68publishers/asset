@@ -11,9 +11,6 @@ use SixtyEightPublishers;
 
 final class AssetExtension extends Nette\DI\CompilerExtension
 {
-	/** @var \SixtyEightPublishers\Asset\DI\ReferenceFacade  */
-	private $reference;
-
 	/** @var \SixtyEightPublishers\Asset\DI\PackageDefinitionFacade  */
 	private $packages;
 
@@ -22,13 +19,15 @@ final class AssetExtension extends Nette\DI\CompilerExtension
 
 	public function __construct()
 	{
-		$this->reference = new ReferenceFacade($this);
-		$this->packages = new PackageDefinitionFacade($this->reference);
-		$this->versions = new VersionDefinitionFacade($this->reference);
+		$reference = new ReferenceFacade($this);
+		$this->packages = new PackageDefinitionFacade($reference);
+		$this->versions = new VersionDefinitionFacade($reference);
 	}
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @throws \Nette\Utils\AssertionException
 	 */
 	public function loadConfiguration(): void
 	{

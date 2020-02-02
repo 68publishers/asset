@@ -10,7 +10,7 @@ use SixtyEightPublishers;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class AssetMacroSetTest extends SixtyEightPublishers\Asset\Tests\Cases\TestCase
+final class AssetMacroSetTest extends Tester\TestCase
 {
 	/** @var NULL|\Nette\DI\Container */
 	private $container;
@@ -22,7 +22,7 @@ final class AssetMacroSetTest extends SixtyEightPublishers\Asset\Tests\Cases\Tes
 	{
 		parent::setUp();
 
-		$this->container = $this->createContainer(self::class . __METHOD__, __DIR__ . '/../../files/assets.neon');
+		$this->container = SixtyEightPublishers\Asset\Tests\Helper\ContainerFactory::createContainer(__METHOD__, __DIR__ . '/../../files/assets.neon');
 	}
 
 	/**

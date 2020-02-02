@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\Tests\Cases\DI;
+namespace SixtyEightPublishers\Asset\Tests\Fixtures;
 
 use Symfony;
 

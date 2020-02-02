@@ -10,7 +10,7 @@ final class Config
 {
 	use Nette\SmartObject;
 
-	const 	MAIN_PACKAGE_DEFAULT = [
+	private const MAIN_PACKAGE_DEFAULT = [
 		'base_path' => '',
 		'base_urls' => [],
 		'version' => NULL,
@@ -20,7 +20,7 @@ final class Config
 		'packages' => [],
 	];
 
-	const 	PACKAGE_DEFAULTS = [
+	private const PACKAGE_DEFAULTS = [
 		'base_path' => NULL,
 		'base_urls' => [],
 		'version' => NULL,
@@ -97,15 +97,15 @@ final class Config
 			$package['base_urls'] = [ $package['base_urls'] ];
 		}
 
-		if (isset($package['version_strategy']) && isset($package['version'])) {
+		if (isset($package['version_strategy'], $package['version'])) {
 			throw new \LogicException('You cannot use both "version_strategy" and "version" at the same time under "assets" packages.');
 		}
 
-		if (isset($package['version_strategy']) && isset($package['json_manifest_path'])) {
+		if (isset($package['version_strategy'], $package['json_manifest_path'])) {
 			throw new \LogicException('You cannot use both "version_strategy" and "json_manifest_path" at the same time under "assets" packages.');
 		}
 
-		if (isset($package['version']) && isset($package['json_manifest_path'])) {
+		if (isset($package['version'], $package['json_manifest_path'])) {
 			throw new \LogicException('You cannot use both "version" and "json_manifest_path" at the same time under "assets" packages.');
 		}
 
