@@ -62,23 +62,23 @@ final class AssetExtension extends Nette\DI\CompilerExtension
 		$latteFactory = $builder->getDefinition($builder->getByType(Latte\Engine::class) ?? 'nette.latteFactory');
 
 		# asset filters
-		$latteFactory->addSetup('addFilter', [
+		$latteFactory->getResultDefinition()->addSetup('addFilter', [
 			'name' => 'asset',
 			'callback' => [ $this->prefix('@packages'), 'getUrl' ],
 		]);
 
-		$latteFactory->addSetup('addFilter', [
+		$latteFactory->getResultDefinition()->addSetup('addFilter', [
 			'name' => 'asset_version',
 			'callback' => [ $this->prefix('@packages'), 'getVersion' ],
 		]);
 
 		# asset macros
-		$latteFactory->addSetup('addProvider', [
+		$latteFactory->getResultDefinition()->addSetup('addProvider', [
 			'name' => 'symfonyPackages',
 			'value' => $this->prefix('@packages'),
 		]);
 
-		$latteFactory->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
+		$latteFactory->getResultDefinition()->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
 			'@self',
 			new Nette\PhpGenerator\PhpLiteral(SixtyEightPublishers\Asset\Latte\AssetMacroSet::class),
 		]);
