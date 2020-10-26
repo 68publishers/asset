@@ -36,7 +36,7 @@ final class ReferenceFacade
 				->addDefinition($registrationName = $this->extension->prefix($registrationName))
 				->setType($type)
 				->setFactory($definition)
-				->setInject(FALSE);
+				->addTag(Nette\DI\Extensions\InjectExtension::TAG_INJECT);
 
 			$registrationName = '@' . $registrationName;
 		} else {
