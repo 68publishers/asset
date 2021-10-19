@@ -6,7 +6,7 @@
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 
-This package integrates [symfony/asset](https://github.com/symfony/asset) into Nette Framework. 
+This package integrates [symfony/asset](https://github.com/symfony/asset) into Nette Framework.
 Configuration is almost same as Symfony's [configuration](https://symfony.com/doc/4.2/reference/configuration/framework.html#assets).
 
 ## Installation
@@ -56,7 +56,7 @@ You can also use Filter/Helper equivalent. For example if you want to store resu
 Before committing any changes, don't forget to run
 
 ```bash
-vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v --dry-run
+vendor/bin/php-cs-fixer fix -v --dry-run
 ```
 
 and

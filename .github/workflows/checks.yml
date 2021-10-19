@@ -1,0 +1,57 @@
+name: 68publishers/asset checks
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4', '8.0']
+    name: PHP ${{ matrix.php-versions }} Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+          extensions: tokenizer
+          tools: composer:v2
+
+      - name: Nette code checker
+        run: |
+          composer create-project nette/code-checker temp/code-checker ~3.2 --no-progress
+          php temp/code-checker/code-checker -d ./src -d ./tests --strict-types --no-progress
+
+      - name: Install lowest dependencies
+        run: composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable
+
+      - name: Run tests
+        run: vendor/bin/tester -C -s ./tests
+
+      - name: Install highest dependencies
+        run: composer update --no-progress --prefer-dist --prefer-stable
+
+      - name: Run tests
+        run: vendor/bin/tester -C -s ./tests
+
+      - name: Php-cs-fixer
+        run: vendor/bin/php-cs-fixer fix -v --dry-run
+
+      - name: Code coverage
+        if: ${{ '8.0' == matrix.php-versions }}
+        run: |
+          vendor/bin/tester -p phpdbg -C tests -s --coverage ./coverage.xml --coverage-src ./src
+          vendor/bin/ocular code-coverage:upload --format=php-clover coverage.xml
