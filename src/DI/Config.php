@@ -90,10 +90,10 @@ final class Config
 		Nette\Utils\Validators::assertField($package, 'version', 'string|null');
 		Nette\Utils\Validators::assertField($package, 'version_format', TRUE === $isDefault ? 'string' : 'string|null');
 		Nette\Utils\Validators::assertField($package, 'json_manifest_path', 'string|null');
-		Nette\Utils\Validators::assertField($package, 'base_path', 'string|null');
-		Nette\Utils\Validators::assertField($package, 'base_urls', 'string|string[]');
+		Nette\Utils\Validators::assertField($package, 'base_path', 'string|null|' . Nette\DI\Statement::class);
+		Nette\Utils\Validators::assertField($package, 'base_urls', 'string|string[]|' . Nette\DI\Statement::class . '[]');
 
-		if (is_string($package['base_urls'])) {
+		if (!is_array($package['base_urls'])) {
 			$package['base_urls'] = [ $package['base_urls'] ];
 		}
 

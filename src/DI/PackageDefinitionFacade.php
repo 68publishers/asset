@@ -23,14 +23,14 @@ final class PackageDefinitionFacade
 	}
 
 	/**
-	 * @param string              $name
-	 * @param string|NULL         $basePath
-	 * @param array               $baseUrls
-	 * @param \Nette\DI\Statement $versionStrategy
+	 * @param string                          $name
+	 * @param string|NULL|\Nette\DI\Statement $basePath
+	 * @param array                           $baseUrls
+	 * @param \Nette\DI\Statement             $versionStrategy
 	 *
 	 * @return \Nette\DI\Statement
 	 */
-	public function createPackageStatement(string $name, ?string $basePath, array $baseUrls, Nette\DI\Statement $versionStrategy): Nette\DI\Statement
+	public function createPackageStatement(string $name, $basePath, array $baseUrls, Nette\DI\Statement $versionStrategy): Nette\DI\Statement
 	{
 		if (!empty($basePath) && !empty($baseUrls)) {
 			throw new \LogicException('An asset package cannot have base URLs and base paths.');
@@ -39,7 +39,7 @@ final class PackageDefinitionFacade
 		if (empty($baseUrls)) {
 			$reference = $this->getPackageDependencyReference(
 				new Nette\DI\Statement(Symfony\Component\Asset\PathPackage::class, [
-					'basePath' => (string) $basePath,
+					'basePath' => $basePath ?? '',
 					'versionStrategy' => $versionStrategy,
 				]),
 				$name
