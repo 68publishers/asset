@@ -1,0 +1,6 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	version_strategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('123')
+	json_manifest_path: %cwd%/manifest.json

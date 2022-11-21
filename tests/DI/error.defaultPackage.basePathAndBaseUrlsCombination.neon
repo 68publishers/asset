@@ -1,0 +1,6 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	base_path: /
+	base_urls: https://images1.example.com

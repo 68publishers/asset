@@ -1,0 +1,11 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	version: 2.1
+	version_format: '%%s?version=%%s'
+	base_urls:
+		- https://cdn.example.com
+	packages:
+		json_manifest_strategy:
+			json_manifest_path: %cwd%/manifest.json

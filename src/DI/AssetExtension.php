@@ -4,106 +4,188 @@ declare(strict_types=1);
 
 namespace SixtyEightPublishers\Asset\DI;
 
-use Latte;
-use Nette;
-use Symfony;
-use SixtyEightPublishers;
+use Latte\Engine;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
+use Nette\DI\CompilerExtension;
+use Nette\PhpGenerator\PhpLiteral;
+use Nette\DI\Definitions\Statement;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Asset\UrlPackage;
+use Symfony\Component\Asset\PathPackage;
+use Nette\DI\Definitions\FactoryDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
+use Symfony\Component\Asset\PackageInterface;
+use SixtyEightPublishers\Asset\Latte\AssetMacroSet;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
+use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+use function assert;
+use function is_array;
+use function is_string;
 
-final class AssetExtension extends Nette\DI\CompilerExtension
+final class AssetExtension extends CompilerExtension
 {
-	/** @var \SixtyEightPublishers\Asset\DI\PackageDefinitionFacade  */
-	private $packages;
-
-	/** @var \SixtyEightPublishers\Asset\DI\VersionDefinitionFacade  */
-	private $versions;
-
-	public function __construct()
+	public function getConfigSchema(): Schema
 	{
-		$reference = new ReferenceFacade($this);
-		$this->packages = new PackageDefinitionFacade($reference);
-		$this->versions = new VersionDefinitionFacade($reference);
+		$assertVersionStrategyAndVersionCombination = static fn (object $package): bool => !isset($package->version_strategy, $package->version);
+		$assertVersionStrategyAndJsonManifestPathCombination = static fn (object $package): bool => !isset($package->version_strategy, $package->json_manifest_path);
+		$assertVersionAndJsonManifestPathCombination = static fn (object $package): bool => !isset($package->version, $package->json_manifest_path);
+		$assertBasePathAndBaseUrlsCombination = static fn (object $package): bool => !(!empty($package->base_path) && !empty($package->base_urls));
+
+		$packageStructure = Expect::structure([
+			'base_path' => Expect::string()
+				->nullable(),
+			'base_urls' => Expect::anyOf(Expect::string(), Expect::listOf('string'))
+				->default([])
+				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
+			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
+				->nullable()
+				->before(static fn ($val) => NULL !== $val ? (string) $val : NULL),
+			'version_format' => Expect::string()
+				->nullable(),
+			'version_strategy' => Expect::anyOf(Expect::type(Statement::class), Expect::string())
+				->nullable()
+				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
+			'json_manifest_path' => Expect::string()
+				->nullable(),
+		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
+			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
+			->assert($assertVersionStrategyAndJsonManifestPathCombination, 'You cannot use both \'version_strategy\' and \'json_manifest_path\' at the same time.')
+			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.')
+			->castTo(PackageConfig::class);
+
+		return Expect::structure([
+			'base_path' => Expect::string(''),
+			'base_urls' => Expect::anyOf(Expect::string(), Expect::listOf('string'))
+				->default([])
+				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
+			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
+				->nullable()
+				->before(static fn ($val) => NULL !== $val ? (string) $val : NULL),
+			'version_format' => Expect::string('%s?%s'),
+			'version_strategy' => Expect::anyOf(Expect::type(Statement::class), Expect::string())
+				->nullable()
+				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
+			'json_manifest_path' => Expect::string()
+				->nullable(),
+			'packages' => Expect::arrayOf($packageStructure, 'string'),
+		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
+			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
+			->assert($assertVersionStrategyAndJsonManifestPathCombination, 'You cannot use both \'version_strategy\' and \'json_manifest_path\' at the same time.')
+			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.')
+			->castTo(AssetConfig::class);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @throws \Nette\Utils\AssertionException
-	 */
 	public function loadConfiguration(): void
 	{
-		$namedPackages = [];
-		$config = (new Config())->getConfig($this);
+		$packages = [];
+		$config = $this->config;
+		assert($config instanceof AssetConfig);
 
-		$defaultVersion = NULL !== $config['version_strategy']
-			? new Nette\DI\Statement($this->versions->getVersionDependencyReference($config['version_strategy'], '_default'))
-			: $this->versions->createVersionStatement('_default', $config['version'], $config['version_format'], $config['json_manifest_path']);
+		$defaultVersionStrategy = $this->createVersionStrategy('_default', $config);
+		$defaultPackage = $this->createPackage('_default', $config, $defaultVersionStrategy);
 
-		$defaultPackage = $this->packages->createPackageStatement('_default', $config['base_path'], $config['base_urls'], $defaultVersion);
-
-		foreach ($config['packages'] as $name => $package) {
-			$namedPackages[$name] = $this->createPackage((string) $name, $package, $config, $defaultVersion);
+		foreach ($config->packages as $name => $package) {
+			$package->version_format = $package->version_format ?? $config->version_format;
+			$versionStrategy = $this->createVersionStrategy($name, $package, $defaultVersionStrategy);
+			$packages[$name] = $this->createPackage($name, $package, $versionStrategy);
 		}
 
 		$this->getContainerBuilder()
 			->addDefinition($this->prefix('packages'))
-			->setType(Symfony\Component\Asset\Packages::class)
+			->setType(Packages::class)
 			->setArguments([
 				'defaultPackage' => $defaultPackage,
-				'packages' => $namedPackages,
+				'packages' => $packages,
 			]);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
-		$latteFactory = $builder->getDefinition($builder->getByType(Latte\Engine::class) ?? 'nette.latteFactory');
+		$latteFactory = $builder->getDefinition($builder->getByType(Engine::class) ?? 'nette.latteFactory');
+		assert($latteFactory instanceof FactoryDefinition);
+		$resultDefinition = $latteFactory->getResultDefinition();
 
 		# asset filters
-		$latteFactory->getResultDefinition()->addSetup('addFilter', [
+		$resultDefinition->addSetup('addFilter', [
 			'name' => 'asset',
-			'callback' => [ $this->prefix('@packages'), 'getUrl' ],
+			'callback' => [$this->prefix('@packages'), 'getUrl'],
 		]);
 
-		$latteFactory->getResultDefinition()->addSetup('addFilter', [
+		$resultDefinition->addSetup('addFilter', [
 			'name' => 'asset_version',
-			'callback' => [ $this->prefix('@packages'), 'getVersion' ],
+			'callback' => [$this->prefix('@packages'), 'getVersion'],
 		]);
 
 		# asset macros
-		$latteFactory->getResultDefinition()->addSetup('addProvider', [
+		$resultDefinition->addSetup('addProvider', [
 			'name' => 'symfonyPackages',
 			'value' => $this->prefix('@packages'),
 		]);
 
-		$latteFactory->getResultDefinition()->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
+		$resultDefinition->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
 			'@self',
-			new Nette\PhpGenerator\PhpLiteral(SixtyEightPublishers\Asset\Latte\AssetMacroSet::class),
+			new PhpLiteral(AssetMacroSet::class),
 		]);
 	}
 
-	/**
-	 * @param string              $name
-	 * @param array               $package
-	 * @param array               $config
-	 * @param \Nette\DI\Statement $defaultVersion
-	 *
-	 * @return \Nette\DI\Statement
-	 */
-	private function createPackage(string $name, array $package, array $config, Nette\DI\Statement $defaultVersion): Nette\DI\Statement
+	private function createVersionStrategy(string $packageName, PackageConfig $config, ?ServiceDefinition $default = NULL): ServiceDefinition
 	{
-		if (NULL !== $package['version_strategy']) {
-			$version = new Nette\DI\Statement($this->versions->getVersionDependencyReference($package['version_strategy'], $name));
-		} elseif (NULL === $package['version'] && NULL === $package['json_manifest_path']) {
-			// if neither version nor json_manifest_path are specified, use the default
-			$version = $defaultVersion;
-		} else {
-			// let format fallback to main version_format
-			$version = $this->versions->createVersionStatement($name, !empty($package['version']) ? $package['version'] : NULL, $package['version_format'] ?: $config['version_format'], $package['json_manifest_path']);
+		$statement = (static function (PackageConfig $config): ?Statement {
+			if ($config->version_strategy instanceof Statement) {
+				return $config->version_strategy;
+			}
+
+			if (NULL !== $config->version) {
+				return new Statement(StaticVersionStrategy::class, [
+					'version' => (string) $config->version,
+					'format' => (string) $config->version_format,
+				]);
+			}
+
+			if (NULL !== $config->json_manifest_path) {
+				return new Statement(JsonManifestVersionStrategy::class, [
+					'manifestPath' => $config->json_manifest_path,
+				]);
+			}
+
+			return NULL;
+		})($config);
+
+		if (NULL === $statement && NULL !== $default) {
+			return $default;
 		}
 
-		return $this->packages->createPackageStatement($name, $package['base_path'], $package['base_urls'], $version);
+		return $this->getContainerBuilder()
+			->addDefinition($this->prefix('version_strategy.' . $packageName))
+			->setType(VersionStrategyInterface::class)
+			->setFactory($statement ?? new Statement(EmptyVersionStrategy::class))
+			->setAutowired(FALSE);
+	}
+
+	private function createPackage(string $packageName, PackageConfig $config, ServiceDefinition $versionStrategy): ServiceDefinition
+	{
+		$statement = (static function (PackageConfig $config, ServiceDefinition $versionStrategy): Statement {
+			if (empty($config->base_urls)) {
+				return new Statement(PathPackage::class, [
+					'basePath' => (string) $config->base_path,
+					'versionStrategy' => $versionStrategy,
+				]);
+			}
+
+			return new Statement(UrlPackage::class, [
+				'baseUrls' => $config->base_urls,
+				'versionStrategy' => $versionStrategy,
+			]);
+		})($config, $versionStrategy);
+
+		return $this->getContainerBuilder()
+			->addDefinition($this->prefix('package.' . $packageName))
+			->setType(PackageInterface::class)
+			->setFactory($statement)
+			->setAutowired(FALSE);
 	}
 }

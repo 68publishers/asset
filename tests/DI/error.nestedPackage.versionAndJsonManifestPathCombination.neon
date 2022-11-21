@@ -1,0 +1,8 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	packages:
+		test_package:
+			version: 1.0
+			json_manifest_path: %cwd%/manifest.json
