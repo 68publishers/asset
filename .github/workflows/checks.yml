@@ -19,17 +19,53 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Make init
-        run: make init
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
 
       - name: Php-Cs-Fixer
-        run: make cs.check
+        run: vendor/bin/php-cs-fixer fix -v --dry-run
 
       - name: PhpStan
-        run: make stan
+        run: vendor/bin/phpstan analyse --level 9 src
 
   tests:
-    name: Unit Tests
+    name: Unit Tests [PHP ${{ matrix.php-versions }}]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
+
+      - name: Run tests
+        run: vendor/bin/tester -C -s ./tests
+
+      - name: Install dependencies (lowest)
+        run: composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet
+
+      - name: Run tests
+        run: vendor/bin/tester -C -s ./tests
+
+  coverage:
+    name: Coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,31 +73,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Make init
-        run: make init
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          coverage: none
+          extensions: tokenizer
+          tools: composer:v2
 
-      - name: Run tests [PHP 7.4]
-        run: PHP=74 make tests.run
+      - name: Install dependencies
+        run: composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
 
-      - name: Run tests [PHP 8.0]
-        run: PHP=80 make tests.run
+      - name: Generate the coverage report
+        run: vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
 
-      - name: Run tests [PHP 8.1]
-        run: PHP=81 make tests.run
-
-      - name: Run tests [PHP 8.2]
-        run: PHP=82 make tests.run
-
-  #coverage:
-  #    - name: Checkout
-  #      uses: actions/checkout@v2
-  #      with:
-  #        fetch-depth: 0
-
-  #    - name: Make init
-  #      run: make init
-
-  #    - name: Generate the coverage report
-  #      run: |
-  #        make coverage
-  #        vendor/bin/ocular code-coverage:upload --format=php-clover coverage.xml
+      - name: Upload the coverage report
+        env:
+          COVERALLS_REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.3/php-coveralls.phar
+          php php-coveralls.phar --verbose --config tests/.coveralls.yml
