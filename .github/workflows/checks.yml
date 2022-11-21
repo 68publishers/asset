@@ -10,48 +10,58 @@ on:
       - master
 
 jobs:
-  checks:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['7.2', '7.3', '7.4', '8.0']
-    name: PHP ${{ matrix.php-versions }} Test
+  coding-style:
+    name: Coding Style
+    runs-on: ubuntu-lates
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
+      - name: Make init
+        run: make init
+
+      - name: Php-Cs-Fixer
+        run: make cs-check
+
+      - name: PhpStan
+        run: make stan
+
+  tests:
+    name: Unit Tests
+    runs-on: ubuntu-lates
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: none
-          extensions: tokenizer
-          tools: composer:v2
+          fetch-depth: 0
 
-      - name: Nette code checker
-        run: |
-          composer create-project nette/code-checker temp/code-checker ~3.2 --no-progress
-          php temp/code-checker/code-checker -d ./src -d ./tests --strict-types --no-progress
+      - name: Make init
+        run: make init
 
-      - name: Install lowest dependencies
-        run: composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable
+      - name: Run tests [PHP 7.4]
+        run: PHP=74 make tests.run
 
-      - name: Run tests
-        run: vendor/bin/tester -C -s ./tests
+      - name: Run tests [PHP 8.0]
+        run: PHP=80 make tests.run
 
-      - name: Install highest dependencies
-        run: composer update --no-progress --prefer-dist --prefer-stable
+      - name: Run tests [PHP 8.1]
+        run: PHP=81 make tests.run
 
-      - name: Run tests
-        run: vendor/bin/tester -C -s ./tests
+      - name: Run tests [PHP 8.2]
+        run: PHP=82 make tests.run
 
-      - name: Php-cs-fixer
-        run: vendor/bin/php-cs-fixer fix -v --dry-run
+  #coverage:
+  #    - name: Checkout
+  #      uses: actions/checkout@v2
+  #      with:
+  #        fetch-depth: 0
 
-      - name: Code coverage
-        if: ${{ '8.0' == matrix.php-versions }}
-        run: |
-          vendor/bin/tester -p phpdbg -C tests -s --coverage ./coverage.xml --coverage-src ./src
-          vendor/bin/ocular code-coverage:upload --format=php-clover coverage.xml
+  #    - name: Make init
+  #      run: make init
+
+  #    - name: Generate the coverage report
+  #      run: |
+  #        make coverage
+  #        vendor/bin/ocular code-coverage:upload --format=php-clover coverage.xml
