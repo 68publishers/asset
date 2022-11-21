@@ -22,7 +22,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.basePathAndBaseUrlsCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset' with value object SixtyEightPublishers\Asset\DI\AssetConfig."
+			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
 		);
 	}
 
@@ -31,7 +31,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.basePathAndBaseUrlsCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\Asset\DI\PackageConfig."
+			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
 		);
 	}
 
@@ -40,7 +40,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\Asset\DI\AssetConfig."
+			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
 		);
 	}
 
@@ -49,7 +49,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\Asset\DI\PackageConfig."
+			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
 		);
 	}
 
@@ -58,7 +58,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionStrategyAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\Asset\DI\AssetConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
 		);
 	}
 
@@ -67,7 +67,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionStrategyAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\Asset\DI\PackageConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
 		);
 	}
 
@@ -76,7 +76,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionStrategyAndVersionCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset' with value object SixtyEightPublishers\Asset\DI\AssetConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
 		);
 	}
 
@@ -85,7 +85,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionStrategyAndVersionCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\Asset\DI\PackageConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
 		);
 	}
 

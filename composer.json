@@ -23,8 +23,7 @@
 		"nette/tester": "^2.4.3",
 		"phpstan/phpstan": "^1.9",
 		"phpstan/phpstan-nette": "^1.1",
-		"roave/security-advisories": "dev-latest",
-		"scrutinizer/ocular": "dev-master"
+		"roave/security-advisories": "dev-latest"
 	},
 	"conflict": {
 		"nette/schema": "<1.2.0"
