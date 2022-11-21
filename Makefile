@@ -22,32 +22,34 @@ tests.all:
 	PHP=82 make tests.run
 
 cs.fix:
-	docker exec -it 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v
+	PHP=81 make composer.update
+	docker exec 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v
 
 cs.check:
-	docker exec -it 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v --dry-run
+	PHP=81 make composer.update
+	docker exec 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v --dry-run
 
 stan:
 	PHP=81 make composer.update
-	docker exec -it 68publishers.asset.81 vendor/bin/phpstan analyse --level 9 src
+	docker exec 68publishers.asset.81 vendor/bin/phpstan analyse --level 9 src
 
 coverage:
 	PHP=81 make composer.update
-	docker exec -it 68publishers.asset.81 vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
+	docker exec 68publishers.asset.81 vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
 
 composer.update:
 ifndef PHP
 	$(error "PHP argument not set.")
 endif
 	@echo "========== Installing dependencies with PHP $(PHP) ==========" >&2
-	docker exec -it 68publishers.asset.$(PHP) composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
+	docker exec 68publishers.asset.$(PHP) composer update --no-progress --prefer-dist --prefer-stable --optimize-autoloader --quiet
 
 composer.update-lowest:
 ifndef PHP
 	$(error "PHP argument not set.")
 endif
 	@echo "========== Installing dependencies with PHP $(PHP) (prefer lowest dependencies) ==========" >&2
-	docker exec -it 68publishers.asset.$(PHP) composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet
+	docker exec 68publishers.asset.$(PHP) composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet
 
 tests.run:
 ifndef PHP
@@ -55,7 +57,7 @@ ifndef PHP
 endif
 	PHP=$(PHP) make composer.update
 	@echo "========== Running tests with PHP $(PHP) ==========" >&2
-	docker exec -it 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
+	docker exec 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
 	PHP=$(PHP) make composer.update-lowest
 	@echo "========== Running tests with PHP $(PHP) (prefer lowest dependencies) ==========" >&2
-	docker exec -it 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
+	docker exec 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
