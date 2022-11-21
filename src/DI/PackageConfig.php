@@ -8,9 +8,10 @@ use Nette\DI\Definitions\Statement;
 
 class PackageConfig
 {
-	public ?string $base_path;
+	/** @var string|Statement|null */
+	public $base_path;
 
-	/** @var array<string> */
+	/** @var array<string|Statement> */
 	public array $base_urls;
 
 	public ?string $version;

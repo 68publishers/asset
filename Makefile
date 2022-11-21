@@ -21,10 +21,10 @@ tests.all:
 	PHP=81 make tests.run
 	PHP=82 make tests.run
 
-cs-fix:
+cs.fix:
 	docker exec -it 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v
 
-cs-check:
+cs.check:
 	docker exec -it 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v --dry-run
 
 stan:

@@ -171,7 +171,7 @@ final class AssetExtension extends CompilerExtension
 		$statement = (static function (PackageConfig $config, ServiceDefinition $versionStrategy): Statement {
 			if (empty($config->base_urls)) {
 				return new Statement(PathPackage::class, [
-					'basePath' => (string) $config->base_path,
+					'basePath' => $config->base_path ?? '',
 					'versionStrategy' => $versionStrategy,
 				]);
 			}
