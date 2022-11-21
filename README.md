@@ -1,32 +1,36 @@
-# Symfony Asset Component in Nette
+<h1 align="center">Symfony Asset Component in Nette</h1>
 
-[![Build Status][ico-travis]][link-travis]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Latest Version on Packagist][ico-version]][link-packagist]
+<p align="center">
+Integration of <a href="https://github.com/symfony/asset">symfony/asset</a> into Nette Framework.
 
-This package integrates [symfony/asset](https://github.com/symfony/asset) into Nette Framework.
-Configuration is almost same as Symfony's [configuration](https://symfony.com/doc/4.2/reference/configuration/framework.html#assets).
+<a href="https://github.com/68publishers/asset/actions"><img alt="Checks" src="https://badgen.net/github/checks/68publishers/asset/master"></a>
+<a href="https://coveralls.io/github/68publishers/asset?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/68publishers/asset/badge.svg?branch=master"></a>
+<a href="https://packagist.org/packages/68publishers/asset"><img alt="Total Downloads" src="https://badgen.net/packagist/dt/68publishers/asset"></a>
+<a href="https://packagist.org/packages/68publishers/asset"><img alt="Latest Version" src="https://badgen.net/packagist/v/68publishers/asset"></a>
+<a href="https://packagist.org/packages/68publishers/asset"><img alt="PHP Version" src="https://badgen.net/packagist/php/68publishers/asset"></a>
+</p>
 
 ## Installation
 
 The best way to install 68publishers/asset is using Composer:
 
-```bash
-composer require 68publishers/asset
+```sh
+$ composer require 68publishers/asset
 ```
 
-then you can register extension into DIC:
+## Usage
 
-```yaml
+Simply register a compiler extension into DIC:
+
+```neon
 extensions:
-    asset: SixtyEightPublishers\Asset\DI\AssetExtension
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	# your configuration
 ```
 
-## Confiugration
-
-Configuration options are described in official [Symfony documentation](https://symfony.com/doc/4.2/reference/configuration/framework.html#assets)
+Configuration options are described in official [Symfony documentation](https://symfony.com/doc/6.0/reference/configuration/framework.html#assets)
 
 ## Usage in Latte templates
 
@@ -53,26 +57,12 @@ You can also use Filter/Helper equivalent. For example if you want to store resu
 
 ## Contributing
 
-Before committing any changes, don't forget to run
+Before opening a pull request, please check your changes using the following commands
 
 ```bash
-vendor/bin/php-cs-fixer fix -v --dry-run
+$ make init # to pull and start all docker images
+
+$ make cs.check
+$ make stan
+$ make tests.all
 ```
-
-and
-
-```bash
-vendor/bin/tester ./tests
-```
-
-[ico-version]: https://img.shields.io/packagist/v/68publishers/asset.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/68publishers/asset/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/68publishers/asset.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/68publishers/asset.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/68publishers/asset.svg?style=flat-square
-
-[link-packagist]: https://packagist.org/packages/68publishers/asset
-[link-travis]: https://travis-ci.org/68publishers/asset
-[link-scrutinizer]: https://scrutinizer-ci.com/g/68publishers/asset/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/68publishers/asset
-[link-downloads]: https://packagist.org/packages/68publishers/asset
