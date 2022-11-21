@@ -1,8 +1,8 @@
 <h1 align="center">Symfony Asset Component in Nette</h1>
 
-<p align="center">
-Integration of <a href="https://github.com/symfony/asset">symfony/asset</a> into Nette Framework.
+<p align="center">Integration of <a href="https://github.com/symfony/asset">symfony/asset</a> into Nette Framework.</p>
 
+<p align="center">
 <a href="https://github.com/68publishers/asset/actions"><img alt="Checks" src="https://badgen.net/github/checks/68publishers/asset/master"></a>
 <a href="https://coveralls.io/github/68publishers/asset?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/68publishers/asset/badge.svg?branch=master"></a>
 <a href="https://packagist.org/packages/68publishers/asset"><img alt="Total Downloads" src="https://badgen.net/packagist/dt/68publishers/asset"></a>
