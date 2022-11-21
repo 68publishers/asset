@@ -1,6 +1,9 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
 services:
 	myStrategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('-FOO')
 
 asset:
 	version_strategy: @myStrategy
-	base_urls: http://cdn.example.com
+	base_urls: https://cdn.example.com

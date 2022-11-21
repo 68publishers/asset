@@ -1,0 +1,6 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+
+asset:
+	version: 1.0
+	version_strategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('123')

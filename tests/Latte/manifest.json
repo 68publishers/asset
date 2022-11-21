@@ -1,0 +1,4 @@
+{
+	"my/file.json": "/my/file.abc123.json",
+	"my/nested/file.json": "/my/nested/file.abc123.json"
+}
