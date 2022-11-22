@@ -21,6 +21,7 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
+use SixtyEightPublishers\Asset\Latte\AssetExtension as AssetLatteExtension;
 use function assert;
 use function is_array;
 use function is_string;
@@ -109,27 +110,33 @@ final class AssetExtension extends CompilerExtension
 		assert($latteFactory instanceof FactoryDefinition);
 		$resultDefinition = $latteFactory->getResultDefinition();
 
-		# asset filters
-		$resultDefinition->addSetup('addFilter', [
-			'name' => 'asset',
-			'callback' => [$this->prefix('@packages'), 'getUrl'],
-		]);
+		if (version_compare(Engine::VERSION, '3', '<')) {
+			# asset filters
+			$resultDefinition->addSetup('addFilter', [
+				'name' => 'asset',
+				'callback' => [$this->prefix('@packages'), 'getUrl'],
+			]);
 
-		$resultDefinition->addSetup('addFilter', [
-			'name' => 'asset_version',
-			'callback' => [$this->prefix('@packages'), 'getVersion'],
-		]);
+			$resultDefinition->addSetup('addFilter', [
+				'name' => 'asset_version',
+				'callback' => [$this->prefix('@packages'), 'getVersion'],
+			]);
 
-		# asset macros
-		$resultDefinition->addSetup('addProvider', [
-			'name' => 'symfonyPackages',
-			'value' => $this->prefix('@packages'),
-		]);
+			# asset macros
+			$resultDefinition->addSetup('addProvider', [
+				'name' => 'symfonyPackages',
+				'value' => $this->prefix('@packages'),
+			]);
 
-		$resultDefinition->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
-			'@self',
-			new PhpLiteral(AssetMacroSet::class),
-		]);
+			$resultDefinition->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
+				'@self',
+				new PhpLiteral(AssetMacroSet::class),
+			]);
+		} else {
+			$resultDefinition->addSetup('addExtension', [
+				new Statement(AssetLatteExtension::class),
+			]);
+		}
 	}
 
 	private function createVersionStrategy(string $packageName, PackageConfig $config, ?ServiceDefinition $default = NULL): ServiceDefinition

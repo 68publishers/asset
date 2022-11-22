@@ -1,3 +1,13 @@
 includes:
 	- vendor/phpstan/phpstan-nette/extension.neon
 	- vendor/phpstan/phpstan-nette/rules.neon
+
+parameters:
+	ignoreErrors:
+		-
+			message: '~If condition is always false\.~'
+			path: src/DI/AssetExtension.php
+
+	excludePaths:
+		analyse:
+			- src/Latte/AssetMacroSet.php
