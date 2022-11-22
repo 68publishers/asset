@@ -26,3 +26,6 @@ asset:
 			version_strategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('-FOO')
 		json_manifest_strategy:
 			json_manifest_path: %cwd%/manifest.json
+		json_manifest_strategy_strict:
+			json_manifest_path: %cwd%/manifest.json
+			strict_mode: yes

@@ -10,6 +10,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\UrlPackage;
 use Symfony\Component\Asset\PathPackage;
 use Nette\DI\InvalidConfigurationException;
+use Symfony\Component\Asset\Exception\AssetNotFoundException;
 use function assert;
 use function strpos;
 
@@ -168,6 +169,38 @@ final class AssertExtensionTest extends TestCase
 			PathPackage::class,
 			'/my/image.abc123.png',
 			'/my/image.abc123.png'
+		);
+
+		# strict mode disabled (by default)
+		$this->assertPackage(
+			$packages,
+			'json_manifest_strategy',
+			PathPackage::class,
+			'/missing-image.png',
+			'/missing-image.png',
+			'/missing-image.png'
+		);
+
+		$this->assertPackage(
+			$packages,
+			'json_manifest_strategy_strict',
+			PathPackage::class,
+			'/my/image.abc123.png',
+			'/my/image.abc123.png'
+		);
+
+		# strict mode enabled
+		Assert::exception(
+			fn () => $this->assertPackage(
+				$packages,
+				'json_manifest_strategy_strict',
+				PathPackage::class,
+				'',
+				'',
+				'/missing-image.png'
+			),
+			AssetNotFoundException::class,
+			'Asset "/missing-image.png" not found in manifest "%a%/tests/DI/manifest.json".%A?%'
 		);
 	}
 
