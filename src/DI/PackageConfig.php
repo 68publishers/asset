@@ -21,4 +21,6 @@ class PackageConfig
 	public ?Statement $version_strategy;
 
 	public ?string $json_manifest_path;
+
+	public bool $strict_mode;
 }

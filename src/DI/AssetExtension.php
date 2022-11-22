@@ -51,6 +51,7 @@ final class AssetExtension extends CompilerExtension
 				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
 			'json_manifest_path' => Expect::string()
 				->nullable(),
+			'strict_mode' => Expect::bool(FALSE),
 		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
 			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
 			->assert($assertVersionStrategyAndJsonManifestPathCombination, 'You cannot use both \'version_strategy\' and \'json_manifest_path\' at the same time.')
@@ -71,6 +72,7 @@ final class AssetExtension extends CompilerExtension
 				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
 			'json_manifest_path' => Expect::string()
 				->nullable(),
+			'strict_mode' => Expect::bool(FALSE),
 			'packages' => Expect::arrayOf($packageStructure, 'string'),
 		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
 			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
@@ -156,6 +158,7 @@ final class AssetExtension extends CompilerExtension
 			if (NULL !== $config->json_manifest_path) {
 				return new Statement(JsonManifestVersionStrategy::class, [
 					'manifestPath' => $config->json_manifest_path,
+					'strictMode' => $config->strict_mode,
 				]);
 			}
 
