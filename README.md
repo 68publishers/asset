@@ -45,16 +45,14 @@ Configuration options are described in official [Symfony documentation](https://
 <p>Version: {asset_version 'my/awesome/image.png', 'foo'}</p>
 ```
 
-You can also use Filter/Helper equivalent. For example if you want to store result in variable:
+You can also use a function equivalent. For example if you want to store result in variable:
 
 ```latte
-{var $filename = 'my/awesome/image.png'}
+{var $asset = asset('my/awesome/image.png')}
+{var $asset = asset('my/awesome/image.png', 'foo')}
 
-{$filename|asset}
-{$filename|asset: foo}
-
-{$filename|asset_version}
-{$filename|asset_version: foo}
+{var $version = asset_version('my/awesome/image.png')}
+{var $version = asset_version('my/awesome/image.png', 'foo')}
 ```
 
 ## Contributing

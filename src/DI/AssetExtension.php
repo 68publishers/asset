@@ -113,13 +113,13 @@ final class AssetExtension extends CompilerExtension
 		$resultDefinition = $latteFactory->getResultDefinition();
 
 		if (version_compare(Engine::VERSION, '3', '<')) {
-			# asset filters
-			$resultDefinition->addSetup('addFilter', [
+			# asset functions
+			$resultDefinition->addSetup('addFunction', [
 				'name' => 'asset',
 				'callback' => [$this->prefix('@packages'), 'getUrl'],
 			]);
 
-			$resultDefinition->addSetup('addFilter', [
+			$resultDefinition->addSetup('addFunction', [
 				'name' => 'asset_version',
 				'callback' => [$this->prefix('@packages'), 'getVersion'],
 			]);
