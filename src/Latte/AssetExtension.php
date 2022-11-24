@@ -34,7 +34,7 @@ final class AssetExtension extends Extension
 	/**
 	 * @return array{asset: callable, asset_version: callable}
 	 */
-	public function getFilters(): array
+	public function getFunctions(): array
 	{
 		return [
 			'asset' => [$this->packages, 'getUrl'],

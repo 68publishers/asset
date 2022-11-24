@@ -14,7 +14,7 @@ use function assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class AssetMacrosAndFiltersTest extends TestCase
+final class AssetMacrosAndFunctionsTest extends TestCase
 {
 	private Engine $engine;
 
@@ -46,39 +46,19 @@ final class AssetMacrosAndFiltersTest extends TestCase
 		]);
 	}
 
-	public function testAssetFilter(): void
+	public function testAssetFunction(): void
 	{
-		$defaultPackage = <<< LATTE
-{var \$file = "my/file.json"}
-{\$file|asset}
-LATTE;
-
-		$nestedPackage = <<< LATTE
-{var \$file = "my/nested/file.json"}
-{\$file|asset: json_manifest_strategy}
-LATTE;
-
 		$this->assertLatte([
-			[$defaultPackage, 'https://cdn.example.com/my/file.json?version=2.1'],
-			[$nestedPackage, '/my/nested/file.abc123.json'],
+			['{asset("my/file.json")}', 'https://cdn.example.com/my/file.json?version=2.1'],
+			['{asset("my/nested/file.json", "json_manifest_strategy")}', '/my/nested/file.abc123.json'],
 		]);
 	}
 
-	public function testAssetVersionFilter(): void
+	public function testAssetVersionFunction(): void
 	{
-		$defaultPackage = <<< LATTE
-{var \$file = "my/file.json"}
-{\$file|asset_version}
-LATTE;
-
-		$nestedPackage = <<< LATTE
-{var \$file = "my/nested/file.json"}
-{\$file|asset_version: json_manifest_strategy}
-LATTE;
-
 		$this->assertLatte([
-			[$defaultPackage, '2.1'],
-			[$nestedPackage, '/my/nested/file.abc123.json'],
+			['{asset_version("my/file.json")}', '2.1'],
+			['{asset_version("my/nested/file.json", "json_manifest_strategy")}', '/my/nested/file.abc123.json'],
 		]);
 	}
 
@@ -92,4 +72,4 @@ LATTE;
 	}
 }
 
-(new AssetMacrosAndFiltersTest())->run();
+(new AssetMacrosAndFunctionsTest())->run();
