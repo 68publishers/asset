@@ -7,8 +7,9 @@ namespace SixtyEightPublishers\Asset\Bridge\Nette\DI;
 use Latte\Engine;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
+use Nette\DI\ContainerBuilder;
 use Nette\DI\CompilerExtension;
-use Nette\PhpGenerator\PhpLiteral;
+use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\UrlPackage;
@@ -16,12 +17,12 @@ use Symfony\Component\Asset\PathPackage;
 use Nette\DI\Definitions\FactoryDefinition;
 use Nette\DI\Definitions\ServiceDefinition;
 use Symfony\Component\Asset\PackageInterface;
-use SixtyEightPublishers\Asset\Bridge\Latte\AssetMacroSet;
+use SixtyEightPublishers\Asset\Bridge\Latte\AssetLatte2Extension;
+use SixtyEightPublishers\Asset\Bridge\Latte\AssetLatte3Extension;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
-use SixtyEightPublishers\Asset\Bridge\Latte\AssetExtension as AssetLatteExtension;
 use function assert;
 use function is_array;
 use function is_string;
@@ -113,32 +114,20 @@ final class AssetExtension extends CompilerExtension
 		$resultDefinition = $latteFactory->getResultDefinition();
 
 		if (version_compare(Engine::VERSION, '3', '<')) {
-			# asset functions
-			$resultDefinition->addSetup('addFunction', [
-				'name' => 'asset',
-				'callback' => [$this->prefix('@packages'), 'getUrl'],
+			$resultDefinition->addSetup('?::extend(?, ?)', [
+				ContainerBuilder::literal(AssetLatte2Extension::class),
+				new Reference('self'),
+				new Reference($this->prefix('packages')),
 			]);
 
-			$resultDefinition->addSetup('addFunction', [
-				'name' => 'asset_version',
-				'callback' => [$this->prefix('@packages'), 'getVersion'],
-			]);
-
-			# asset macros
-			$resultDefinition->addSetup('addProvider', [
-				'name' => 'symfonyPackages',
-				'value' => $this->prefix('@packages'),
-			]);
-
-			$resultDefinition->addSetup('?->onCompile[] = function ($engine) { ?::install($engine->getCompiler()); }', [
-				'@self',
-				new PhpLiteral(AssetMacroSet::class),
-			]);
-		} else {
-			$resultDefinition->addSetup('addExtension', [
-				new Statement(AssetLatteExtension::class),
-			]);
+			return;
 		}
+
+		$resultDefinition->addSetup('addExtension', [
+			new Statement(AssetLatte3Extension::class, [
+				new Reference($this->prefix('packages')),
+			]),
+		]);
 	}
 
 	private function createVersionStrategy(string $packageName, PackageConfig $config, ?ServiceDefinition $default = NULL): ServiceDefinition
