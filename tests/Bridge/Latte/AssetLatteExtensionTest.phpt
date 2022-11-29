@@ -14,7 +14,7 @@ use function assert;
 
 require __DIR__ . '/../../bootstrap.php';
 
-final class AssetMacrosAndFunctionsTest extends TestCase
+final class AssetLatteExtensionTest extends TestCase
 {
 	private Engine $engine;
 
@@ -72,4 +72,4 @@ final class AssetMacrosAndFunctionsTest extends TestCase
 	}
 }
 
-(new AssetMacrosAndFunctionsTest())->run();
+(new AssetLatteExtensionTest())->run();

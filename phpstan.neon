@@ -11,3 +11,4 @@ parameters:
 	excludePaths:
 		analyse:
 			- src/Bridge/Latte/AssetMacroSet.php
+			- src/Bridge/Latte/AssetLatte2Extension.php
