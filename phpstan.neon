@@ -6,8 +6,8 @@ parameters:
 	ignoreErrors:
 		-
 			message: '~If condition is always false\.~'
-			path: src/DI/AssetExtension.php
+			path: src/Bridge/Nette/DI/AssetExtension.php
 
 	excludePaths:
 		analyse:
-			- src/Latte/AssetMacroSet.php
+			- src/Bridge/Latte/AssetMacroSet.php

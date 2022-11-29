@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\DI;
+namespace SixtyEightPublishers\Asset\Bridge\Nette\DI;
 
 use Nette\DI\Definitions\Statement;
 

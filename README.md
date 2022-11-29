@@ -24,7 +24,7 @@ Simply register a compiler extension into DIC:
 
 ```neon
 extensions:
-	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+	asset: SixtyEightPublishers\Asset\Bridge\Nette\DI\AssetExtension
 
 asset:
 	# your configuration

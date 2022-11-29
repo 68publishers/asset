@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\DI;
+namespace SixtyEightPublishers\Asset\Bridge\Nette\DI;
 
 use Latte\Engine;
 use Nette\Schema\Expect;
@@ -16,12 +16,12 @@ use Symfony\Component\Asset\PathPackage;
 use Nette\DI\Definitions\FactoryDefinition;
 use Nette\DI\Definitions\ServiceDefinition;
 use Symfony\Component\Asset\PackageInterface;
-use SixtyEightPublishers\Asset\Latte\AssetMacroSet;
+use SixtyEightPublishers\Asset\Bridge\Latte\AssetMacroSet;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
-use SixtyEightPublishers\Asset\Latte\AssetExtension as AssetLatteExtension;
+use SixtyEightPublishers\Asset\Bridge\Latte\AssetExtension as AssetLatteExtension;
 use function assert;
 use function is_array;
 use function is_string;

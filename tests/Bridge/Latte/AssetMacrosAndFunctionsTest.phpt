@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\Tests\Latte;
+namespace SixtyEightPublishers\Asset\Tests\Bridge\Latte;
 
 use Latte\Engine;
 use Tester\Assert;
 use Tester\TestCase;
 use Latte\Loaders\StringLoader;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
-use SixtyEightPublishers\Asset\Tests\DI\ContainerFactory;
+use SixtyEightPublishers\Asset\Tests\Bridge\Nette\DI\ContainerFactory;
 use function assert;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 final class AssetMacrosAndFunctionsTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\Tests\DI;
+namespace SixtyEightPublishers\Asset\Tests\Bridge\Nette\DI;
 
 use Tester\Assert;
 use Tester\TestCase;
@@ -14,7 +14,7 @@ use Symfony\Component\Asset\Exception\AssetNotFoundException;
 use function assert;
 use function strpos;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../../bootstrap.php';
 
 final class AssertExtensionTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.basePathAndBaseUrlsCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
+			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\AssetConfig."
 		);
 	}
 
@@ -32,7 +32,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.basePathAndBaseUrlsCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
+			"Failed assertion 'You cannot use both 'base_path' and 'base_urls' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\PackageConfig."
 		);
 	}
 
@@ -41,7 +41,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
+			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\AssetConfig."
 		);
 	}
 
@@ -50,7 +50,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
+			"Failed assertion 'You cannot use both 'version' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\PackageConfig."
 		);
 	}
 
@@ -59,7 +59,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionStrategyAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\AssetConfig."
 		);
 	}
 
@@ -68,7 +68,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionStrategyAndJsonManifestPathCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'json_manifest_path' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\PackageConfig."
 		);
 	}
 
@@ -77,7 +77,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.versionStrategyAndVersionCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\DI\\AssetConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\AssetConfig."
 		);
 	}
 
@@ -86,7 +86,7 @@ final class AssertExtensionTest extends TestCase
 		Assert::exception(
 			static fn () => ContainerFactory::create(__DIR__ . '/error.nestedPackage.versionStrategyAndVersionCombination.neon'),
 			InvalidConfigurationException::class,
-			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\DI\\PackageConfig."
+			"Failed assertion 'You cannot use both 'version_strategy' and 'version' at the same time.' for item 'asset\u{a0}›\u{a0}packages\u{a0}›\u{a0}test_package' with value object SixtyEightPublishers\\Asset\\Bridge\\Nette\\DI\\PackageConfig."
 		);
 	}
 
@@ -200,7 +200,7 @@ final class AssertExtensionTest extends TestCase
 				'/missing-image.png'
 			),
 			AssetNotFoundException::class,
-			'Asset "/missing-image.png" not found in manifest "%a%/tests/DI/manifest.json".%A?%'
+			'Asset "/missing-image.png" not found in manifest "%a%/DI/manifest.json".%A?%'
 		);
 	}
 

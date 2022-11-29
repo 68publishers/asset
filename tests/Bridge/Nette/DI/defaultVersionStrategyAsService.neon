@@ -1,5 +1,5 @@
 extensions:
-	asset: SixtyEightPublishers\Asset\DI\AssetExtension
+	asset: SixtyEightPublishers\Asset\Bridge\Nette\DI\AssetExtension
 
 services:
 	myStrategy: SixtyEightPublishers\Asset\Tests\Fixtures\CustomVersionStrategy('-FOO')

@@ -1,0 +1,2 @@
+extensions:
+	asset: SixtyEightPublishers\Asset\Bridge\Nette\DI\AssetExtension
