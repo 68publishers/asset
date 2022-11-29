@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\Tests\DI;
+namespace SixtyEightPublishers\Asset\Tests\Bridge\Nette\DI;
 
 use Tester\Helpers;
 use Nette\DI\Container;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SixtyEightPublishers\Asset\Latte;
+namespace SixtyEightPublishers\Asset\Bridge\Latte;
 
 use Latte\Extension;
 use Latte\Compiler\Tag;
