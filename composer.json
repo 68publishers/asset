@@ -13,7 +13,7 @@
 		"php": "^7.4 || ^8.0",
 		"latte/latte": "^2.5 || ^3.0",
 		"nette/di": "^3.0.10",
-		"nette/utils": "^3.2.5",
+		"nette/utils": "^3.2.5 || ^4.0",
 		"symfony/asset": "^5.4 || ^6.0"
 	},
 	"require-dev": {
