@@ -32,7 +32,7 @@ jobs:
         run: vendor/bin/php-cs-fixer fix -v --dry-run
 
       - name: PhpStan
-        run: vendor/bin/phpstan analyse --level 9 src
+        run: vendor/bin/phpstan analyse --level max src
 
   tests:
     name: Unit Tests [PHP ${{ matrix.php-versions }}]
