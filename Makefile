@@ -31,7 +31,7 @@ cs.check:
 
 stan:
 	PHP=81 make composer.update
-	docker exec 68publishers.asset.81 vendor/bin/phpstan analyse --level 9 src
+	docker exec 68publishers.asset.81 vendor/bin/phpstan analyse --level max src
 
 coverage:
 	PHP=81 make composer.update
