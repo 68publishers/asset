@@ -39,7 +39,7 @@ final class AssetExtension extends CompilerExtension
 		$packageStructure = Expect::structure([
 			'base_path' => Expect::string()
 				->nullable(),
-			'base_urls' => Expect::anyOf(Expect::string(), Expect::listOf('string'))
+			'base_urls' => Expect::anyOf(Expect::type(Statement::class), Expect::string(), Expect::listOf('string|' . Statement::class))
 				->default([])
 				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
 			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
@@ -61,7 +61,7 @@ final class AssetExtension extends CompilerExtension
 
 		return Expect::structure([
 			'base_path' => Expect::string(''),
-			'base_urls' => Expect::anyOf(Expect::string(), Expect::listOf('string'))
+			'base_urls' => Expect::anyOf(Expect::type(Statement::class), Expect::string(), Expect::listOf('string|' . Statement::class))
 				->default([])
 				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
 			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
