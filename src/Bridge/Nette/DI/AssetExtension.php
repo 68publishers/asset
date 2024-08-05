@@ -53,11 +53,11 @@ final class AssetExtension extends CompilerExtension
 			'json_manifest_path' => Expect::string()
 				->nullable(),
 			'strict_mode' => Expect::bool(FALSE),
-		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
+		])->castTo(PackageConfig::class)
+			->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
 			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
 			->assert($assertVersionStrategyAndJsonManifestPathCombination, 'You cannot use both \'version_strategy\' and \'json_manifest_path\' at the same time.')
-			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.')
-			->castTo(PackageConfig::class);
+			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.');
 
 		return Expect::structure([
 			'base_path' => Expect::string(''),
@@ -75,11 +75,11 @@ final class AssetExtension extends CompilerExtension
 				->nullable(),
 			'strict_mode' => Expect::bool(FALSE),
 			'packages' => Expect::arrayOf($packageStructure, 'string'),
-		])->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
+		])->castTo(AssetConfig::class)
+			->assert($assertBasePathAndBaseUrlsCombination, 'You cannot use both \'base_path\' and \'base_urls\' at the same time.')
 			->assert($assertVersionStrategyAndVersionCombination, 'You cannot use both \'version_strategy\' and \'version\' at the same time.')
 			->assert($assertVersionStrategyAndJsonManifestPathCombination, 'You cannot use both \'version_strategy\' and \'json_manifest_path\' at the same time.')
-			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.')
-			->castTo(AssetConfig::class);
+			->assert($assertVersionAndJsonManifestPathCombination, 'You cannot use both \'version\' and \'json_manifest_path\' at the same time.');
 	}
 
 	public function loadConfiguration(): void
