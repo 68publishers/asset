@@ -18,6 +18,8 @@ The best way to install 68publishers/asset is using Composer:
 $ composer require 68publishers/asset
 ```
 
+The package requires PHP `^8.3`, Latte `^3.0` and `symfony/asset` `^5.4 || ^6.0 || ^7.0 || ^8.0`.
+
 ## Usage
 
 Simply register a compiler extension into DIC:
@@ -30,7 +32,7 @@ asset:
 	# your configuration
 ```
 
-Configuration options are described in official [Symfony documentation](https://symfony.com/doc/6.0/reference/configuration/framework.html#assets)
+Configuration options are described in official [Symfony documentation](https://symfony.com/doc/current/reference/configuration/framework.html#assets)
 
 ## Usage in Latte templates
 
@@ -54,6 +56,14 @@ You can also use a function equivalent. For example if you want to store result 
 {var $version = asset_version('my/awesome/image.png')}
 {var $version = asset_version('my/awesome/image.png', 'foo')}
 ```
+
+## Upgrade
+
+### 3.x → 4.0
+
+- The minimal PHP version is 8.3.
+- Latte 2 is no longer supported, the classes `AssetLatte2Extension` and `AssetMacroSet` are removed.
+- The option `version` must be a string, an integer or a float, other values (e.g. a boolean) are an invalid configuration. Previously they were cast to a string.
 
 ## Contributing
 

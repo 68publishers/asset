@@ -9,20 +9,24 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   coding-style:
     name: Coding Style
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.3
           tools: composer:v2
 
       - name: Install dependencies
@@ -32,18 +36,19 @@ jobs:
         run: vendor/bin/php-cs-fixer fix -v --dry-run
 
       - name: PhpStan
-        run: vendor/bin/phpstan analyse --level max src
+        run: vendor/bin/phpstan analyse
 
   tests:
     name: Unit Tests [PHP ${{ matrix.php-versions }}]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2']
+        php-versions: ['8.3', '8.4', '8.5']
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Install PHP
@@ -58,10 +63,13 @@ jobs:
       - name: Run tests
         run: vendor/bin/tester -C -s ./tests
 
+      # the lowest third-party versions predate PHP 8.4 and 8.5 and trigger deprecations there, the lowest dependencies are tested on the minimal PHP
       - name: Install dependencies (lowest)
+        if: matrix.php-versions == '8.3'
         run: composer update --no-progress --prefer-dist --prefer-lowest --prefer-stable --optimize-autoloader --quiet
 
-      - name: Run tests
+      - name: Run tests (lowest)
+        if: matrix.php-versions == '8.3'
         run: vendor/bin/tester -C -s ./tests
 
   coverage:
@@ -69,14 +77,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.3
           coverage: none
           extensions: tokenizer
           tools: composer:v2

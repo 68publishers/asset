@@ -90,6 +90,30 @@ final class AssertExtensionTest extends TestCase
 		);
 	}
 
+	public function testExceptionShouldBeThrownWhenVersionIsBoolean(): void
+	{
+		Assert::exception(
+			static fn () => ContainerFactory::create(__DIR__ . '/error.defaultPackage.booleanVersion.neon'),
+			InvalidConfigurationException::class,
+			"The item 'asset\u{a0}›\u{a0}version' expects to be string|int|float|null, true given.",
+		);
+	}
+
+	public function testIntegerVersionIsCastToString(): void
+	{
+		$container = ContainerFactory::create(__DIR__ . '/integerVersion.neon');
+		$packages = $container->getService('asset.packages');
+		assert($packages instanceof Packages);
+
+		$this->assertPackage(
+			$packages,
+			NULL,
+			PathPackage::class,
+			'/my/image.png?2',
+			'2'
+		);
+	}
+
 	public function testMinimalConfiguration(): void
 	{
 		$container = ContainerFactory::create(__DIR__ . '/minimal.neon');
