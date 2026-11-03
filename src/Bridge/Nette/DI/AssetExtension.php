@@ -7,7 +7,6 @@ namespace SixtyEightPublishers\Asset\Bridge\Nette\DI;
 use Latte\Engine;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use Nette\DI\ContainerBuilder;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\Reference;
 use Nette\DI\Definitions\Statement;
@@ -17,24 +16,25 @@ use Symfony\Component\Asset\PathPackage;
 use Nette\DI\Definitions\FactoryDefinition;
 use Nette\DI\Definitions\ServiceDefinition;
 use Symfony\Component\Asset\PackageInterface;
-use SixtyEightPublishers\Asset\Bridge\Latte\AssetLatte2Extension;
 use SixtyEightPublishers\Asset\Bridge\Latte\AssetLatte3Extension;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\VersionStrategyInterface;
 use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 use function assert;
+use function is_int;
 use function is_array;
+use function is_float;
 use function is_string;
 
 final class AssetExtension extends CompilerExtension
 {
 	public function getConfigSchema(): Schema
 	{
-		$assertVersionStrategyAndVersionCombination = static fn (object $package): bool => !isset($package->version_strategy, $package->version);
-		$assertVersionStrategyAndJsonManifestPathCombination = static fn (object $package): bool => !isset($package->version_strategy, $package->json_manifest_path);
-		$assertVersionAndJsonManifestPathCombination = static fn (object $package): bool => !isset($package->version, $package->json_manifest_path);
-		$assertBasePathAndBaseUrlsCombination = static fn (object $package): bool => !(!empty($package->base_path) && !empty($package->base_urls));
+		$assertVersionStrategyAndVersionCombination = static fn (mixed $package): bool => $package instanceof PackageConfig && !isset($package->version_strategy, $package->version);
+		$assertVersionStrategyAndJsonManifestPathCombination = static fn (mixed $package): bool => $package instanceof PackageConfig && !isset($package->version_strategy, $package->json_manifest_path);
+		$assertVersionAndJsonManifestPathCombination = static fn (mixed $package): bool => $package instanceof PackageConfig && !isset($package->version, $package->json_manifest_path);
+		$assertBasePathAndBaseUrlsCombination = static fn (mixed $package): bool => $package instanceof PackageConfig && !(!empty($package->base_path) && !empty($package->base_urls));
 
 		$packageStructure = Expect::structure([
 			'base_path' => Expect::string()
@@ -44,12 +44,12 @@ final class AssetExtension extends CompilerExtension
 				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
 			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
 				->nullable()
-				->before(static fn ($val) => NULL !== $val ? (string) $val : NULL),
+				->before(static fn (mixed $val): mixed => is_int($val) || is_float($val) ? (string) $val : $val),
 			'version_format' => Expect::string()
 				->nullable(),
 			'version_strategy' => Expect::anyOf(Expect::type(Statement::class), Expect::string())
 				->nullable()
-				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
+				->before(static fn (mixed $strategy): mixed => is_string($strategy) ? new Statement($strategy) : $strategy),
 			'json_manifest_path' => Expect::string()
 				->nullable(),
 			'strict_mode' => Expect::bool(FALSE),
@@ -66,11 +66,11 @@ final class AssetExtension extends CompilerExtension
 				->before(static fn ($val): array => !is_array($val) ? [$val] : $val),
 			'version' => Expect::anyOf(Expect::string(), Expect::int(), Expect::float())
 				->nullable()
-				->before(static fn ($val) => NULL !== $val ? (string) $val : NULL),
+				->before(static fn (mixed $val): mixed => is_int($val) || is_float($val) ? (string) $val : $val),
 			'version_format' => Expect::string('%s?%s'),
 			'version_strategy' => Expect::anyOf(Expect::type(Statement::class), Expect::string())
 				->nullable()
-				->before(static fn ($strategy): ?Statement => is_string($strategy) ? new Statement($strategy) : $strategy),
+				->before(static fn (mixed $strategy): mixed => is_string($strategy) ? new Statement($strategy) : $strategy),
 			'json_manifest_path' => Expect::string()
 				->nullable(),
 			'strict_mode' => Expect::bool(FALSE),
@@ -111,19 +111,8 @@ final class AssetExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$latteFactory = $builder->getDefinition($builder->getByType(Engine::class) ?? 'nette.latteFactory');
 		assert($latteFactory instanceof FactoryDefinition);
-		$resultDefinition = $latteFactory->getResultDefinition();
 
-		if (version_compare(Engine::VERSION, '3', '<')) {
-			$resultDefinition->addSetup('?::extend(?, ?)', [
-				ContainerBuilder::literal(AssetLatte2Extension::class),
-				new Reference('self'),
-				new Reference($this->prefix('packages')),
-			]);
-
-			return;
-		}
-
-		$resultDefinition->addSetup('addExtension', [
+		$latteFactory->getResultDefinition()->addSetup('addExtension', [
 			new Statement(AssetLatte3Extension::class, [
 				new Reference($this->prefix('packages')),
 			]),

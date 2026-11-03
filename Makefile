@@ -16,26 +16,25 @@ restart:
 	make start
 
 tests.all:
-	PHP=74 make tests.run
-	PHP=80 make tests.run
-	PHP=81 make tests.run
-	PHP=82 make tests.run
+	PHP=83 make tests.run
+	PHP=84 make tests.run
+	PHP=85 make tests.run
 
 cs.fix:
-	PHP=81 make composer.update
-	docker exec 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v
+	PHP=83 make composer.update
+	docker exec 68publishers.asset.83 vendor/bin/php-cs-fixer fix -v
 
 cs.check:
-	PHP=81 make composer.update
-	docker exec 68publishers.asset.81 vendor/bin/php-cs-fixer fix -v --dry-run
+	PHP=83 make composer.update
+	docker exec 68publishers.asset.83 vendor/bin/php-cs-fixer fix -v --dry-run
 
 stan:
-	PHP=81 make composer.update
-	docker exec 68publishers.asset.81 vendor/bin/phpstan analyse --level max src
+	PHP=84 make composer.update
+	docker exec 68publishers.asset.84 vendor/bin/phpstan analyse
 
 coverage:
-	PHP=81 make composer.update
-	docker exec 68publishers.asset.81 vendor/bin/tester -p phpdbg -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
+	PHP=84 make composer.update
+	docker exec 68publishers.asset.84 vendor/bin/tester -C -s --coverage ./coverage.xml --coverage-src ./src ./tests
 
 composer.update:
 ifndef PHP
@@ -58,6 +57,9 @@ endif
 	PHP=$(PHP) make composer.update
 	@echo "========== Running tests with PHP $(PHP) ==========" >&2
 	docker exec 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
+# the lowest third-party versions predate PHP 8.4 and 8.5, the lowest dependencies are tested on the minimal PHP
+ifeq ($(PHP),83)
 	PHP=$(PHP) make composer.update-lowest
 	@echo "========== Running tests with PHP $(PHP) (prefer lowest dependencies) ==========" >&2
 	docker exec 68publishers.asset.$(PHP) vendor/bin/tester -C -s ./tests
+endif
